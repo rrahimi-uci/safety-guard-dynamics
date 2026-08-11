@@ -34,7 +34,7 @@ is how a real regression stops hiding behind a known one.
 
 > LOCK.json records a runtime software fingerprint pinning Python 3.12; the local .venv is 3.14.4, so score validation reports python_mismatch. This is a check-release-tier operation requiring the pinned interpreter, not a local one. Local convenience success would not be release verification.
 
-**`paper_c_specialize_align_mortgage_v1`** — `make -C papers/paper_c/specialize_then_align test PY=$(pwd)/.venv/bin/python`
+**`paper_c_specialize_align_mortgage_v1`** — `make -C papers/unified-report/archive/paper_c/specialize_then_align test PY=$(pwd)/.venv/bin/python`
 
 > The tracked candidate lock binds live source bytes and the source tree has since evolved, so test_candidate_lock fails by design. The candidate authorizes no data build, training, or claim, and no child authorization lock exists.
 

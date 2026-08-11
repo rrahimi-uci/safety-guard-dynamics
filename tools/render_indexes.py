@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Render studies/README.md and papers/README.md from the registry.
+"""Render studies/README.md and papers/unified-report/PAPERS_INDEX.md from the registry.
 
 These files are generated, never hand-edited: the layout plan requires the registry to
 be the only source of study state. `--check` fails when a rendered file has drifted,
@@ -12,6 +12,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import pathlib
 import sys
 
@@ -99,17 +100,22 @@ def studies_index(reg) -> str:
 
 def papers_index(reg) -> str:
     lines = [BANNER, "", "# Publications", "",
-             "Publication state comes from [`studies/registry.yaml`](../studies/registry.yaml);",
+             "Publication state comes from [`studies/registry.yaml`](../../studies/registry.yaml);",
              "this file is a generated view. A document under `papers/` is not automatically",
              "current — the label below is authoritative.", "",
              "| Manuscript | Study | Publication state | Evidence tier |",
              "| --- | --- | --- | --- |"]
     for s in reg["studies"]:
         for path in s.get("manuscript_paths") or []:
-            rel = path[len("papers/"):] if path.startswith("papers/") else f"../{path}"
+            index_path = ROOT / "papers/unified-report/PAPERS_INDEX.md"
+            target_path = ROOT / path
+            rel = (pathlib.Path(os.path.relpath(target_path, index_path.parent))
+                   if path.startswith("papers/")
+                   else pathlib.Path(os.path.relpath(ROOT / path, index_path.parent)))
+            rel_str = rel.as_posix() or "."
             tier = " ".join(s["evidence_tier"].split())
             lines.append(
-                f"| [`{path}`]({rel}) | `{s['study_id']}` "
+                f"| [`{path}`]({rel_str}) | `{s['study_id']}` "
                 f"| {s['publication_state']} | {tier} |"
             )
     lines += ["", "## Editorial lifecycle", "",
@@ -203,7 +209,7 @@ def main() -> int:
     args = parser.parse_args()
     reg = load()
     targets = {ROOT / "studies/README.md": studies_index(reg),
-               ROOT / "papers/README.md": papers_index(reg)}
+               ROOT / "papers/unified-report/PAPERS_INDEX.md": papers_index(reg)}
     for study in reg["studies"]:
         pkg = study.get("package_path")
         if not pkg:

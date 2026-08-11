@@ -7,16 +7,16 @@
   "operation": "copy_not_move",
   "digest_tool": "tools/tree_digest.py",
   "digest_coverage_rule": "all regular files except build residue (__pycache__, *.pyc, .pytest_cache, *.egg-info, .DS_Store) and except the contents of artifacts/, inputs/, build/ -- but .gitkeep placeholders inside those directories ARE included",
-  "reverify_command": "python tools/tree_digest.py papers/paper_c/specialize_then_align studies/paper-c-specialize-align-mortgage-v1 --tracked-only --exclude provenance/MIGRATION_MANIFEST.json --diff",
+  "reverify_command": "python tools/tree_digest.py papers/unified-report/archive/paper_c/specialize_then_align studies/paper-c-specialize-align-mortgage-v1 --tracked-only --exclude provenance/MIGRATION_MANIFEST.json --diff",
   "old_tree": {
-    "path": "papers/paper_c/specialize_then_align",
-    "aggregate_sha256": "98306ce90594e5c18b8a51356b5197d7996780239769ebdb9aa2a1d1f956a243",
+    "path": "papers/unified-report/archive/paper_c/specialize_then_align",
+    "aggregate_sha256": "1714314984bce4dc26f1437af5aa68f3b0a53dbf404c4bf5bd1fab7853f96e97",
     "file_count": 68,
     "status": "intact_compatibility_surface"
   },
   "new_tree": {
     "path": "studies/paper-c-specialize-align-mortgage-v1",
-    "aggregate_sha256": "6727c4842e7c4b067bd9f599301d01c2cfa52ef34a878e4afbf790d7f10a0844",
+    "aggregate_sha256": "dfbb45ce1fe91c109ea96c64b049dbf1f8255c98c9b6c0e9049ef439f2e8572b",
     "file_count": 71,
     "status": "phase_4_study_package"
   },
@@ -44,17 +44,18 @@
       "environment/gpu-requirements.txt"
     ],
     "content_differs": [
+      "Makefile",
       "README.md"
     ],
-    "explanation": "The new package adds an environment record and this manifest, which the predecessor has no equivalent of, and rewrites README.md to state that it is a copy that authorizes nothing. Nothing is missing from the new tree. All source, config, schemas, tests, tools, cloud scripts, manuscript, locks and layout placeholders are byte-identical.",
+    "explanation": "The new package adds an environment record and this manifest, which the predecessor has no equivalent of, rewrites README.md to state that it is a copy that authorizes nothing, and now carries a divergent Makefile because the predecessor archive moved under papers/unified-report/archive/ while the study package remained at studies/. Nothing is missing from the new tree. All source, config, schemas, tests, tools, cloud scripts, manuscript, locks and layout placeholders are otherwise byte-identical.",
     "correction": "An earlier version of this manifest reported one divergent file and a 67/68 file split. That comparison hashed only non-ignored files, so it could not see .gitkeep placeholders living under ignored prefixes -- and the copy had in fact dropped three of them (artifacts/, inputs/, build/). inputs/.gitkeep was tracked source, so the new tree was genuinely incomplete while the check reported it faithful. The placeholders were restored byte-for-byte and the coverage rule is now stated above and printed by the tool on every run.",
-    "note": "artifacts/.gitkeep appears as new-tree-only because of the .gitignore asymmetry recorded below: it is trackable under studies/ and excluded outright by papers/paper_c/.gitignore, so the predecessor cannot track it. Both trees have the file on disk; only one can commit it. Counts are stated with this manifest excluded."
+    "note": "artifacts/.gitkeep appears as new-tree-only because of the .gitignore asymmetry recorded below: it is trackable under studies/ and excluded outright by papers/unified-report/archive/paper_c/.gitignore, so the predecessor cannot track it. Both trees have the file on disk; only one can commit it. Counts are stated with this manifest excluded."
   },
   "gitignore_asymmetry": {
     "finding": "artifacts/.gitkeep is TRACKABLE in the new tree but IGNORED in the old one; build/.gitkeep is ignored in both.",
-    "cause": "The package .gitignore writes `artifacts/**` then `!artifacts/.gitkeep`, but git cannot re-include a file whose parent DIRECTORY is excluded. papers/paper_c/.gitignore:7 excludes `artifacts/` outright, which kills the negation there; no such ancestor rule exists under studies/, so it takes effect. The root .gitignore:7 excludes `build/`, which kills that negation in both.",
+    "cause": "The package .gitignore writes `artifacts/**` then `!artifacts/.gitkeep`, but git cannot re-include a file whose parent DIRECTORY is excluded. papers/unified-report/archive/paper_c/.gitignore:7 excludes `artifacts/` outright, which kills the negation there; no such ancestor rule exists under studies/, so it takes effect. The root .gitignore:7 excludes `build/`, which kills that negation in both.",
     "consequence": "None for execution -- writers call mkdir(parents=True, exist_ok=True). It does show up in the tracked-file comparison as a declared divergence, and it means a fresh clone of the predecessor has no artifacts/ directory until something creates it.",
-    "not_fixed_here": "Editing papers/paper_c/.gitignore or the root .gitignore to make the negations live would change ignore semantics for paths outside this study package, which is beyond a Phase 5 copy. Recorded rather than silently adjusted."
+    "not_fixed_here": "Editing papers/unified-report/archive/paper_c/.gitignore or the root .gitignore to make the negations live would change ignore semantics for paths outside this study package, which is beyond a Phase 5 copy. Recorded rather than silently adjusted."
   },
   "authorization": {
     "claim_authorization": false,
@@ -63,7 +64,7 @@
   },
   "independent_verification": {
     "old_tree": {
-      "command": "make -C papers/paper_c/specialize_then_align test PY=<abs>",
+      "command": "make -C papers/unified-report/archive/paper_c/specialize_then_align test PY=<abs>",
       "result": "1 failed, 70 passed"
     },
     "new_tree": {
@@ -74,7 +75,7 @@
     "declared_failure_detail": "ContractError: locked config bytes drifted -- the candidate lock binds live source bytes and the source tree has evolved. Declared expected_fail in studies/registry.yaml for both trees; `make check-locks` errors if it ever starts passing.",
     "identical_outcomes": true,
     "repo_root_resolution": {
-      "papers/paper_c/specialize_then_align": "safety-guard-dynamics",
+      "papers/unified-report/archive/paper_c/specialize_then_align": "safety-guard-dynamics",
       "studies/paper-c-specialize-align-mortgage-v1": "safety-guard-dynamics"
     },
     "note_on_tallies": "Run pytest without adding -q: pyproject sets addopts=\"-q\" already, and a second -q suppresses the count line entirely. The first attempt at this verification read an absent count line rather than a real one.",

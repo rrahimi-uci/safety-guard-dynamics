@@ -182,7 +182,7 @@ def paper_a(results, check):
 
 
 def paper_b(results, check):
-    pb = REPO / "papers/base-adapter-composition"
+    pb = REPO / "papers/unified-report/archive/base-adapter-composition"
     r = _run([PYS, "code/build_pilot_artifacts.py",
               "--composition", "../../artifacts/paper_a_sft_v2/analysis/composition/composition.json",
               "--metadata", "../../artifacts/paper_a_sft_v2/analysis/composition/composition_metadata.json",

@@ -27,7 +27,7 @@ wins — it is validated in CI by `tools/validate_registries.py`, and this file 
 - **Paper C lineage (all superseded or stopped).** `docs/paper-c-prereg-v2.md` and its development
   plan / code design define the never-run matched VerdictCE/PairCE/DPO scaffold; the v1
   preregistration remains as a superseded amendment record. Both are historical: the active
-  descendant, `papers/paper_c/specialize_then_align/` (plus its migrated copy under
+  descendant, `papers/unified-report/archive/paper_c/specialize_then_align/` (plus its migrated copy under
   `studies/paper-c-specialize-align-mortgage-v1/`), was itself stopped after the disjoint pilot. See
   the banner above and `studies/registry.yaml`.
 - **Current report scaffold.** `unified_report.tex` — *Safety Benchmark Gains Do Not Guarantee Safety Transfer:

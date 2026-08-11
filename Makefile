@@ -21,7 +21,7 @@ COMPOSITION_FULL_ANALYSIS   ?= $(ANALYSIS)/composition-full
 LEGACY_COMPOSITION_ANALYSIS ?= $(LEGACY_ANALYSIS)/composition
 RELEASE_DIR      ?= dist/paper-a-sft-v2-release
 PAPER_ANALYSIS   ?= $(ANALYSIS)
-PAPER_DIR        = papers/finetuning-specialization
+PAPER_DIR        = papers/unified-report/archive/finetuning-specialization
 
 .DEFAULT_GOAL := help
 .PHONY: help install install-all manifests manifests-legacy audit lock relock \
@@ -140,11 +140,11 @@ check-fast: check-registry check-links  ## hermetic tests across every suite
 	$(PY_ABS) -m pytest apps/benchmark-explorer/tests -q
 	$(PY_ABS) apps/benchmark-explorer/src/build.py --target public --fixtures
 	$(MAKE) -C mortgage-benchmark test PY=$(PY_ABS)
-	$(MAKE) -C papers/base-adapter-composition test PYTHON=$(PY_ABS)
+	$(MAKE) -C papers/unified-report/archive/base-adapter-composition test PYTHON=$(PY_ABS)
 	@echo "--- Paper C suites: predecessor and successor ---"
-	@$(MAKE) -C papers/paper_c test PYTHON=$(PY_ABS) \
+	@$(MAKE) -C papers/unified-report/archive/paper_c test PYTHON=$(PY_ABS) \
 	  || echo "NOTE paper_c predecessor: expected_fail, see studies/registry.yaml"
-	@$(MAKE) -C papers/paper_c/specialize_then_align test PY=$(PY_ABS) \
+	@$(MAKE) -C papers/unified-report/archive/paper_c/specialize_then_align test PY=$(PY_ABS) \
 	  || echo "NOTE specialize_then_align: expected_fail (candidate lock binds live source bytes)"
 	@$(MAKE) -C studies/paper-c-specialize-align-mortgage-v1 test PY=$(PY_ABS) \
 	  || echo "NOTE sta study package: expected_fail (same declared candidate-lock failure)"
@@ -153,7 +153,7 @@ check-locks:  ## contract-specific checks; expected_fail cases are declared in t
 	$(PY_ABS) tools/validate_registries.py --run-verification
 
 check-papers:  ## isolated manuscript builds plus link checks
-	bash papers/paper_c/specialize_then_align/manuscript/build.sh
+	bash papers/unified-report/archive/paper_c/specialize_then_align/manuscript/build.sh
 	$(PY_ABS) tools/check_markdown_links.py
 
 report-html:  ## rebuild the HTML edition of the unified report from the same sources

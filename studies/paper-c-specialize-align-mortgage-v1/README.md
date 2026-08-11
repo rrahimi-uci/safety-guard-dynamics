@@ -1,7 +1,7 @@
 # paper-c-specialize-align-mortgage-v1
 
 Phase 4 study package for study `paper_c_specialize_align_mortgage_v1`, migrated from
-`papers/paper_c/specialize_then_align/` per Phase 5 of the repository layout plan.
+`papers/unified-report/archive/paper_c/specialize_then_align/` per Phase 5 of the repository layout plan.
 
 **This is a copy, not a move.** The predecessor tree remains intact as a compatibility
 surface; the plan prohibits moving an active tree before the new version verifies

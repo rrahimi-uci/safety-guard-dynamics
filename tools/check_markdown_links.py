@@ -18,7 +18,7 @@ LINK = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
 DEFAULT_TARGETS = [
     "README.md",
     "studies/README.md",
-    "papers/README.md",
+    "papers/unified-report/PAPERS_INDEX.md",
     "docs/README.md",
     "docs/architecture/repository-layout-v2.md",
     "experiments/README.md",

@@ -46,7 +46,7 @@ coverage: **28 of 32** generated inputs verify in the standard environment, the 
 
 **Study state lives in one place.** [`studies/registry.yaml`](studies/registry.yaml) is the
 normative record of every study's state, evidence tier, contract class, and how to verify it.
-[`studies/README.md`](studies/README.md) and [`papers/README.md`](papers/README.md) are generated
+[`studies/README.md`](studies/README.md) and [`papers/unified-report/PAPERS_INDEX.md`](papers/unified-report/PAPERS_INDEX.md) are generated
 views of it; this README summarizes it and does not redefine it. Run `make check-registry`.
 
 ---
@@ -70,7 +70,7 @@ safety-guard-dynamics/
 ├── guard_research/                      # canonical library: metrics, thresholds, prompts, provenance
 ├── experiments/                         # Paper A pipeline; composition; KL-SFT; ExpGuard; adaptation
 ├── mortgage-benchmark/                  # generator (magen/), frozen v1 release, scorer, baselines, tests
-├── papers/                              # manuscripts (LaTeX + built PDFs); see papers/README.md for state
+├── papers/                              # manuscripts (LaTeX + built PDFs); see papers/unified-report/PAPERS_INDEX.md for state
 │   ├── unified-report/                  # ← the three-act synthesis (primary artifact) + slides/
 │   ├── unified-report-html/             # the same report as HTML, generated from those same sources
 │   ├── finetuning-specialization[-simplified]/    # Paper A  (+ plain-language edition)
@@ -95,7 +95,7 @@ binds `experiments/` paths in eight places, so a copy would either break the loc
 silently diverge from it.
 
 One study now exists in both layouts. `studies/paper-c-specialize-align-mortgage-v1/` is a **copy**
-of `papers/paper_c/specialize_then_align/`, not a move: the plan forbids relocating an active tree
+of `papers/unified-report/archive/paper_c/specialize_then_align/`, not a move: the plan forbids relocating an active tree
 before the new location verifies independently, so both are tested and both must stay behaviourally
 identical. The evidence that the migration preserved behaviour is that they fail *identically* —
 70 passed, 1 failed, that one being a declared `expected_fail` — rather than that the new one merely
@@ -194,17 +194,17 @@ make -C papers/unified-report all      # = reproduce + pdf
 make -C papers/unified-report pdf      # compile only (also copies the PDF to unified_report.pdf)
 
 # The three formal papers
-make -C papers/finetuning-specialization pdf
-make -C papers/base-adapter-composition pdf
-make -C papers/mortgage-guardrail-benchmark pdf
+make -C papers/unified-report/archive/finetuning-specialization pdf
+make -C papers/unified-report/archive/base-adapter-composition pdf
+make -C papers/unified-report/archive/mortgage-guardrail-benchmark pdf
 ```
 
 | Paper | Formal edition | Plain-language edition |
 |---|---|---|
 | **Unified three-act report** | [PDF](papers/unified-report/unified_report.pdf) · [HTML](papers/unified-report-html/index.html) · [LaTeX](papers/unified-report/unified_report.tex) | teaching boxes integrated into the report |
-| Fine-tuning specialization (A) | [PDF](papers/finetuning-specialization/benchmark_chooses_the_winner.pdf) | [annotated](papers/finetuning-specialization-simplified/) |
-| Base+adapter composition (B) | [PDF](papers/base-adapter-composition/compose_dont_tune.pdf) | [simplified](papers/base-adapter-composition-simplified/) |
-| Mortgage guardrail benchmark | [PDF](papers/mortgage-guardrail-benchmark/mortgage_guardrail_benchmark.pdf) | [simplified](papers/mortgage-guardrail-benchmark-simplified/) |
+| Fine-tuning specialization (A) | [PDF](papers/unified-report/archive/finetuning-specialization/benchmark_chooses_the_winner.pdf) | [annotated](papers/unified-report/archive/finetuning-specialization-simplified/) |
+| Base+adapter composition (B) | [PDF](papers/unified-report/archive/base-adapter-composition/compose_dont_tune.pdf) | [simplified](papers/unified-report/archive/base-adapter-composition-simplified/) |
+| Mortgage guardrail benchmark | [PDF](papers/unified-report/archive/mortgage-guardrail-benchmark/mortgage_guardrail_benchmark.pdf) | [simplified](papers/unified-report/archive/mortgage-guardrail-benchmark-simplified/) |
 
 Claim-bearing numbers enter LaTeX only through generated macros/tables (`generated/`), never hand-typed;
 `reproduce-check` guards against drift. The report also ships two Graphviz flowcharts of the study's
@@ -401,13 +401,13 @@ The table below is the narrative summary.
 
 | Track | Main artifact | Honest status |
 |---|---|---|
-| **Act I — specialization** | [Paper A](papers/finetuning-specialization/benchmark_chooses_the_winner.pdf) | **Complete** clean-v2 retrospective estimate (4 checkpoints × 5 seeds); conditional on this fixed panel, not universal or confirmatory. |
-| **Act II — composition** | [Paper B](papers/base-adapter-composition/compose_dont_tune.pdf) | **Retrospective pilot complete.** No separately locked prospective run; controls remain roadmap items. |
+| **Act I — specialization** | [Paper A](papers/unified-report/archive/finetuning-specialization/benchmark_chooses_the_winner.pdf) | **Complete** clean-v2 retrospective estimate (4 checkpoints × 5 seeds); conditional on this fixed panel, not universal or confirmatory. |
+| **Act II — composition** | [Paper B](papers/unified-report/archive/base-adapter-composition/compose_dont_tune.pdf) | **Retrospective pilot complete.** No separately locked prospective run; controls remain roadmap items. |
 | **Act III — mortgage depth** | [frozen benchmark](mortgage-benchmark/benchmark/v1_hmda2022/) | **994-row synthetic benchmark + four-base baselines complete.** LLM-judge / policy-card labels, *not* SME-adjudicated. |
 | **Act III — ExpGuard breadth** | [scores](artifacts/expguard_external/) + [evaluator](experiments/eval_expguard_external.py) | **Complete** four-checkpoint base eval on 2,275 finance/health/law prompts; text-free scores committed; tuned comparison is future work. |
 | **Recipe control — KL-SFT** | [scores](artifacts/klsft_v1/) · [study](studies/klsft/) | **Complete** retrospective four-checkpoint control (β = 0.5, 1.0; 5 seeds), no interval attached. Recovers **+0.061** transfer at a **−0.035** represented cost — mitigation within the SFT family, not restoration. |
 | **Preregistered — starting-type adaptation** | [artifacts](artifacts/starting_type_adaptation_v1/) · [study](studies/starting-type-adaptation/) | **Complete but contract-drifted.** The only analysis-preregistered study (10 checkpoints, 6 families, 6 released vendor guards): RQ1 supported, RQ2 **not supported**. No final `LOCK.json` and the authoring-config hash no longer matches; resolve the drift before any new claim. |
-| **Paper C — specialize-then-align** | [study](papers/paper_c/specialize_then_align/) · [package](studies/paper-c-specialize-align-mortgage-v1/) | **Stopped after its pilot.** Its result is an identifiability finding: with a three-action head and gold-based adjudication, the two candidate-source inventories were 98% byte-identical and the primary contrast was unidentified. No primary panel, no sealed cohort, no claim. |
+| **Paper C — specialize-then-align** | [study](papers/unified-report/archive/paper_c/specialize_then_align/) · [package](studies/paper-c-specialize-align-mortgage-v1/) | **Stopped after its pilot.** Its result is an identifiability finding: with a three-action head and gold-based adjudication, the two candidate-source inventories were 98% byte-identical and the primary contrast was unidentified. No primary panel, no sealed cohort, no claim. |
 
 Acts I and II are reproducible but **retrospective** (their sources were inspected during development).
 The report keeps retrospective, external-expert, and LLM-judge evidence in separate tiers and never pools

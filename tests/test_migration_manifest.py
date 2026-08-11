@@ -1,7 +1,7 @@
 """Enforce the Phase 5 migration manifest instead of trusting it.
 
 `studies/paper-c-specialize-align-mortgage-v1/provenance/MIGRATION_MANIFEST.json` asserts
-that the study package is a faithful copy of `papers/paper_c/specialize_then_align` and
+that the study package is a faithful copy of `papers/unified-report/archive/paper_c/specialize_then_align` and
 that the old tree is still intact. An assertion written once, by hand, decays: the first
 version of that manifest claimed the trees differed by one file when the copy had in fact
 dropped three layout placeholders, because the comparison it was based on could not see
@@ -21,7 +21,7 @@ if str(_ROOT / "tools") not in sys.path:
 
 import tree_digest  # noqa: E402
 
-OLD = _ROOT / "papers/paper_c/specialize_then_align"
+OLD = _ROOT / "papers/unified-report/archive/paper_c/specialize_then_align"
 NEW = _ROOT / "studies/paper-c-specialize-align-mortgage-v1"
 MANIFEST = NEW / "provenance/MIGRATION_MANIFEST.json"
 
@@ -51,7 +51,7 @@ def test_predecessor_tree_still_exists(manifest):
     """A copy, not a move: the compatibility surface must not have been relocated."""
     assert manifest["operation"] == "copy_not_move"
     assert OLD.is_dir(), (
-        "papers/paper_c/specialize_then_align is gone. Phase 5 copies; it does not move. "
+        "papers/unified-report/archive/paper_c/specialize_then_align is gone. Phase 5 copies; it does not move. "
         "Locks, registry entries and the unified report still reference that path."
     )
     assert (OLD / "src/paper_c_sta/contracts.py").is_file()

@@ -18,7 +18,7 @@ Does a calibrated equal-weight average of a base guard and its own SFT adapter r
 - [`experiments/`](../../experiments/)
 
 **Manuscript**
-- [`papers/base-adapter-composition/`](../../papers/base-adapter-composition/)
+- [`papers/unified-report/archive/base-adapter-composition/`](../../papers/unified-report/archive/base-adapter-composition/)
 - [`papers/unified-report/`](../../papers/unified-report/)
 
 ## Verify
@@ -30,7 +30,7 @@ make -C studies/composition verify
 Runs the registry's declared command and expects **expected pass**:
 
 ```
-make -C papers/base-adapter-composition test PYTHON=$(pwd)/.venv/bin/python
+make -C papers/unified-report/archive/base-adapter-composition test PYTHON=$(pwd)/.venv/bin/python
 ```
 
 ---

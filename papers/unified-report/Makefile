@@ -13,7 +13,7 @@ PYTHON     ?= $(if $(wildcard ../../.venv/bin/python),../../.venv/bin/python,pyt
 #
 # One honest limit on `verify`, measured rather than assumed. Three upstream generators are not
 # redirected to the scratch directory: build_pilot_artifacts.py, reeval_from_scores.py and
-# emit_baseline_tex.py write their INTERMEDIATES in place (papers/base-adapter-composition/generated/,
+# emit_baseline_tex.py write their INTERMEDIATES in place (papers/unified-report/archive/base-adapter-composition/generated/,
 # mortgage-benchmark/out_eval/, mortgage-benchmark/generated/). The tracked tree still ends
 # byte-clean, because with no drift the rewrite is byte-identical -- but drift in one of those
 # intermediates is silently REPAIRED rather than reported, so `verify` would say "0 failed".

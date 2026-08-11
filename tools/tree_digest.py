@@ -21,7 +21,7 @@ tracked source that defines the layout, not output. That single exception is wha
 first pass got wrong.
 
 Deliberately independent of ``git check-ignore``: the two trees do not have the same
-ignore semantics. ``papers/paper_c/.gitignore`` excludes ``artifacts/`` as a directory,
+ignore semantics. ``papers/unified-report/archive/paper_c/.gitignore`` excludes ``artifacts/`` as a directory,
 which makes the package's own ``!artifacts/.gitkeep`` negation dead there but live in
 ``studies/``. A digest that inherited that asymmetry could not compare the trees at all.
 
@@ -70,7 +70,7 @@ def included(root: pathlib.Path, path: pathlib.Path) -> bool:
 
 def tracked_paths(root: pathlib.Path) -> list[pathlib.Path]:
     """Paths git tracks under `root`, which is what a fresh clone actually contains."""
-    out = subprocess.run(["git", "ls-files", "-z", "--", str(root)],
+    out = subprocess.run(["git", "ls-files", "-z", "--", "."],
                          cwd=root, capture_output=True, text=True, check=True)
     return [root / rel for rel in out.stdout.split("\0") if rel]
 

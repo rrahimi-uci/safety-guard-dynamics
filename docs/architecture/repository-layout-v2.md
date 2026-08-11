@@ -12,7 +12,7 @@ approved for verbatim redistribution, so no public text build is authorized.
 
 **Correction, 2026-07-27:** this header previously read "its GCS transfers finished." They
 did not. Sixty `gsutil` processes are still alive, the oldest running over 28 hours, and 59
-of them are copying into `…/guard-ranking-fragility/papers/paper_c/…` — the path this
+of them are copying into `…/guard-ranking-fragility/papers/unified-report/archive/paper_c/…` — the path this
 repository occupied *before* the rename to `safety-guard-dynamics`, which no longer exists.
 They sit at 0% CPU holding roughly 1,500 file descriptors and 0.2 GB, so they block nothing
 and did not cause the freeze to persist; the freeze was correctly cleared by stopping Paper C.
@@ -71,7 +71,7 @@ The current repository has several competing organizational models:
 - one study is distributed across `experiments/`, `configs/`, `tests/`, `docs/`,
   `artifacts/`, and `papers/`;
 - active Paper C code, tests, cloud tooling, run outputs, and manuscript sources are
-  nested under `papers/paper_c/specialize_then_align/`;
+  nested under `papers/unified-report/archive/paper_c/specialize_then_align/`;
 - the active Paper C successor is nested inside an archived predecessor, while older
   root-level Paper C files are still described as current in some indexes;
 - `papers/` contains substantial ignored runtime state and a repository-local Cloud
@@ -230,8 +230,8 @@ labeling it sealed or public-ready.
 
 - the root-level matched-DPO candidate files spread across `docs/`, `configs/`,
   `experiments/`, and `tests/`;
-- the reference-centering predecessor at `papers/paper_c/`;
-- the active successor at `papers/paper_c/specialize_then_align/`;
+- the reference-centering predecessor at `papers/unified-report/archive/paper_c/`;
+- the active successor at `papers/unified-report/archive/paper_c/specialize_then_align/`;
 - every ignored input, artifact, bundle, and external object required to explain
   those workspaces.
 
@@ -293,7 +293,7 @@ No structural operation may touch Paper C until all of the following are true:
 Protected during the freeze:
 
 ```text
-papers/paper_c/
+papers/unified-report/archive/paper_c/
 guard_research/
 experiments/
 configs/
@@ -312,7 +312,7 @@ experiments/README.md
 .env.example
 ```
 
-The protection is intentionally broader than `papers/paper_c/`: Paper C and older
+The protection is intentionally broader than `papers/unified-report/archive/paper_c/`: Paper C and older
 compatibility code read several root-level paths.
 
 Git cannot capture ignored Paper C inputs. A clean commit alone is therefore not a
@@ -460,7 +460,7 @@ Each entry should contain:
 - redistribution status;
 - last verified Git revision and whether that verification used a dirty tree.
 
-The root README, `papers/README.md`, and status tables should summarize this registry
+The root README, `papers/unified-report/PAPERS_INDEX.md`, and status tables should summarize this registry
 rather than independently defining study state. The validator must reject unknown
 states, missing targets, cycles in `supersedes`, incompatible evidence/claim states,
 and a reported expected-pass verification command that actually fails.
@@ -488,9 +488,9 @@ and a reported expected-pass verification command that actually fails.
 The Phase 0 deliverables have fixed locations: the distribution ledger and schema
 live under `benchmarks/registry/`; the successor integrity report, ignored-input
 manifest, and external-object manifest live respectively at
-`papers/paper_c/specialize_then_align/provenance/PROTOCOL_INTEGRITY_AUDIT.md`,
-`papers/paper_c/specialize_then_align/provenance/IGNORED_INPUT_MANIFEST.json`, and
-`papers/paper_c/specialize_then_align/provenance/EXTERNAL_OBJECT_MANIFEST.json`.
+`papers/unified-report/archive/paper_c/specialize_then_align/provenance/PROTOCOL_INTEGRITY_AUDIT.md`,
+`papers/unified-report/archive/paper_c/specialize_then_align/provenance/IGNORED_INPUT_MANIFEST.json`, and
+`papers/unified-report/archive/paper_c/specialize_then_align/provenance/EXTERNAL_OBJECT_MANIFEST.json`.
 Create the Paper C files only after its active-work handoff and within the user's
 Paper C scope; each manifest must have a schema or documented version, hashes, and
 a tested restore command.
@@ -506,7 +506,7 @@ This phase changes no scientific paths and begins only after Phase 0.
    clean clone and explicit local full-data inventory tests. A tiny fixture does not
    authorize or reproduce the public full-data build.
 2. Add `studies/registry.yaml`, its schema/validator, and generated-or-checked
-   `studies/README.md` and `papers/README.md` views.
+   `studies/README.md` and `papers/unified-report/PAPERS_INDEX.md` views.
 3. Correct stale references that identify an archived or unresolved Paper C design
    as current, without overstating the active successor's evidence status.
 4. Add tiered root verification targets that delegate to all existing test surfaces
@@ -531,9 +531,9 @@ Current test commands that belong in `check-fast` after the clean-clone split ar
 ```text
 <py> -m pytest -q
 make -C mortgage-benchmark test PY=<absolute-py>
-make -C papers/base-adapter-composition test PYTHON=<absolute-py>
-make -C papers/paper_c test PYTHON=<absolute-py>
-make -C papers/paper_c/specialize_then_align test PY=<absolute-py>
+make -C papers/unified-report/archive/base-adapter-composition test PYTHON=<absolute-py>
+make -C papers/unified-report/archive/paper_c test PYTHON=<absolute-py>
+make -C papers/unified-report/archive/paper_c/specialize_then_align test PY=<absolute-py>
 ```
 
 The clean-clone bootstrap must first select an absolute CPython 3.12 interpreter
@@ -571,9 +571,9 @@ Treat these as distinct studies:
 
 1. the unresolved, unrun root-level matched-DPO candidate spanning `docs/`,
    `configs/`, `experiments/`, and root `tests/`;
-2. the stopped reference-centering workspace at `papers/paper_c/`;
+2. the stopped reference-centering workspace at `papers/unified-report/archive/paper_c/`;
 3. the active cross-model specialist study at
-   `papers/paper_c/specialize_then_align/`.
+   `papers/unified-report/archive/paper_c/specialize_then_align/`.
 
 For the older flat scaffold:
 
@@ -647,7 +647,7 @@ a result-producing environment lock.
 ### Phase 5 — Paper C migration, if still desired
 
 The user's current collaboration contract confines Paper C operations to
-`papers/paper_c/`. Expanding it into `studies/`, `runs/`, or another paper root
+`papers/unified-report/archive/paper_c/`. Expanding it into `studies/`, `runs/`, or another paper root
 requires fresh explicit user authorization even after technical gates pass.
 
 Only after the active study reaches a stable, integrity-audited release and that
@@ -852,7 +852,7 @@ migrated tree so they stay byte-identical:
    seven tests independently.
 
 4. **A dead `.gitignore` negation.** `!artifacts/.gitkeep` cannot re-include a file whose
-   parent directory is excluded, and `papers/paper_c/.gitignore` excludes `artifacts/`
+   parent directory is excluded, and `papers/unified-report/archive/paper_c/.gitignore` excludes `artifacts/`
    outright — so the negation is dead in the predecessor and live under `studies/`.
    Recorded in the migration manifest rather than silently changed: making them agree
    would alter ignore semantics for paths outside this study.
