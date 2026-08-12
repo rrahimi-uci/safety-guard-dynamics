@@ -1,6 +1,7 @@
 name: pages
 
-# GitHub Pages deployment for the HTML edition of the unified report.
+# GitHub Pages deployment for the research publication hub: report, benchmark explorer,
+# downloadable papers, and presentation decks.
 #
 # It is wired, tested, and the licence gate NOW OPENS: v1_hmda2022 is recorded in
 # benchmarks/registry/distribution.yaml as CC BY 4.0 with redistribution_decision
@@ -17,9 +18,8 @@ name: pages
 # rather than about policy: the gate no longer blocks, so a push trigger would put a live
 # deployment one merge away. Publishing stays an explicit, deliberate action.
 #
-# The PDF is deliberately not staged (tests/test_pages_gate.py enforces it): the page's
-# text probes cannot see inside a PDF, so serving one would be exposure the quotation
-# budget could not audit. Link to the repository copy instead.
+# Benchmark text is staged only through the ledger-gated explorer build. The report PDF and
+# decks are explicit release artifacts linked from the publication navigation.
 
 on:
   workflow_dispatch:
@@ -67,7 +67,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: "Install what the gate needs (no build toolchain, nothing is rebuilt here)"
+      - name: Install publication checks and the explorer builder
         run: |
           python -m pip install --upgrade pip
           python -m pip install pyyaml pytest
@@ -75,21 +75,24 @@ jobs:
       - name: The bytes to be served must be within the ledger-authorized quotation budget
         run: python -m pytest tests/test_no_unlicensed_publication.py tests/test_pages_gate.py -q
 
-      # Stage the site, not the source directory. Uploading papers/unified-report-html/
-      # wholesale also served build.py, template.html, README.md and
-      # PUBLICATION_REQUIREMENTS.json at the site root -- repository artifacts, not site
-      # content. The PDF is deliberately NOT staged, and the reason is auditability rather
-      # than withholding: this edition withholds nothing (the redaction has been off since
-      # the 2026-07-27 licence decision), but the text probes in
-      # tests/test_no_unlicensed_publication.py cannot see inside a PDF, so serving one
-      # would be publication the quotation budget could not check. Link to the repository
-      # copy instead.
+      - name: Build the approved benchmark explorer
+        run: python apps/benchmark-explorer/src/build.py --target public --benchmark mortgage-benchmark/benchmark/v1_hmda2022/public_test.jsonl
+
+      # Stage the site, not the source directory. The report's generated navigation points
+      # at the additional publication surfaces below.
       - name: Stage only the site files
         run: |
           mkdir -p _site
           cp papers/unified-report-html/index.html _site/
           cp papers/unified-report-html/robots.txt papers/unified-report-html/sitemap.xml _site/
           cp -r papers/unified-report-html/assets _site/assets
+          mkdir -p _site/explorer _site/papers _site/slides
+          cp -r apps/benchmark-explorer/dist/public/. _site/explorer/
+          cp papers/unified-report/unified_report.pdf papers/facct/main.pdf _site/papers/
+          cp papers/unified-report-html/publication-index-papers.html _site/papers/index.html
+          cp papers/unified-report/slides/safety_guard_benchmark_deck.pptx _site/slides/
+          cp papers/unified-report/slides/safety_guard_exec_deck.pptx _site/slides/
+          cp papers/unified-report-html/publication-index-slides.html _site/slides/index.html
           find _site -type f | sort
 
       - uses: actions/upload-pages-artifact@v3

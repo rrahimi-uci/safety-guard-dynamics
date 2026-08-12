@@ -73,10 +73,7 @@ safety-guard-dynamics/
 ├── papers/                              # manuscripts (LaTeX + built PDFs); see papers/unified-report/PAPERS_INDEX.md for state
 │   ├── unified-report/                  # ← the three-act synthesis (primary artifact) + slides/
 │   ├── unified-report-html/             # the same report as HTML, generated from those same sources
-│   ├── finetuning-specialization[-simplified]/    # Paper A  (+ plain-language edition)
-│   ├── base-adapter-composition[-simplified]/     # Paper B  (+ plain-language edition)
-│   ├── mortgage-guardrail-benchmark[-simplified]/ # mortgage paper (+ plain-language edition)
-│   └── paper_c/                         # stopped predecessor + specialize_then_align/ successor
+│   └── unified-report/archive/          # formal papers and stopped/protocol-stage studies
 ├── artifacts/                           # released & development evidence: locks, manifests, text-free scores
 ├── configs/                             # study configs + the Paper A v2 release anchor
 ├── tools/                               # registry validator, link checker, index renderer, study verifier, tree digest

@@ -212,12 +212,18 @@ def build(rows_by_source: dict[str, list[dict]], *, target: str) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--target", choices=("public", "local"), required=True)
-    parser.add_argument("--fixtures", action="store_true",
+    inputs = parser.add_mutually_exclusive_group(required=True)
+    inputs.add_argument("--fixtures", action="store_true",
                         help="build from tracked CI fixtures instead of local corpora")
+    inputs.add_argument("--benchmark", type=pathlib.Path,
+                        help="build an approved benchmark JSONL as the source")
     args = parser.parse_args()
 
     if args.fixtures:
         rows_by_source = json.loads((APP / "fixtures/sources.json").read_text())
+    elif args.benchmark:
+        rows = [json.loads(line) for line in args.benchmark.read_text().splitlines() if line.strip()]
+        rows_by_source = {"mortgage_benchmark_v1_hmda2022": rows}
     else:
         print("full-data build requires local corpora; use --fixtures for CI",
               file=sys.stderr)

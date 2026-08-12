@@ -68,17 +68,17 @@ jobs:
         run: make -C mortgage-benchmark test PY=$(which python)
 
       - name: Paper B composition suite
-        run: make -C papers/base-adapter-composition test PYTHON=$(which python)
+        run: make -C papers/unified-report/archive/base-adapter-composition test PYTHON=$(which python)
 
       - name: Paper C predecessor suite
-        run: make -C papers/paper_c test PYTHON=$(which python)
+        run: make -C papers/unified-report/archive/paper_c test PYTHON=$(which python)
 
       # Declared expected_fail in studies/registry.yaml: the candidate lock binds live
       # source bytes, so it fails once source evolves. Recorded, not silenced -- if it
       # ever starts passing, `make check-locks` reports that as an error.
       - name: Paper C successor suite (declared expected_fail)
         continue-on-error: true
-        run: make -C papers/paper_c/specialize_then_align test PY=$(which python)
+        run: make -C papers/unified-report/archive/paper_c/specialize_then_align test PY=$(which python)
 
       # Phase 5 migrated copy of the tree above. Both are run because the evidence that
       # the migration was behaviour-preserving is that they fail identically -- 66 passed

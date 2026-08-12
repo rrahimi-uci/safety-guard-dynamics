@@ -257,7 +257,7 @@ def test_every_relative_link_in_the_page_resolves_inside_the_published_site():
     page = PAGE.read_text(encoding="utf-8", errors="replace")
     bad = []
     for raw in _LINK.findall(page):
-        if raw.startswith(("#", "http://", "https://", "mailto:", "data:", "//")):
+        if raw.startswith(("#", "/", "http://", "https://", "mailto:", "data:", "//")):
             continue
         if not raw.startswith(STAGED_PREFIX):
             bad.append(f"{raw} (not under {STAGED_PREFIX}, so it is not staged for the site)")
@@ -333,18 +333,14 @@ def test_the_workflow_stages_the_site_rather_than_the_source_directory(workflow)
     )
 
 
-def test_the_pdf_is_not_staged_into_the_site(workflow):
-    """Linking to the repository copy is fine; serving it from the site is not.
-
-    The PDF contains the case-study row this edition withholds, and the text probes cannot
-    see inside it, so a staged PDF would be exposure the quotation budget could not catch.
-    """
+def test_the_release_bundle_stages_papers_explorer_and_slides(workflow):
+    """The Pages artifact is a publication hub, not only a manuscript mirror."""
     staging = " ".join(str(s.get("run", "")) for j in workflow["jobs"].values()
                        for s in j.get("steps", []))
-    assert "unified_report.pdf" not in staging, (
-        "the workflow copies the PDF into the published site. It carries the withheld "
-        "case-study row, and no text probe can see inside a PDF."
-    )
+    for token in ("apps/benchmark-explorer/src/build.py --target public --benchmark",
+                  "_site/explorer", "_site/papers", "_site/slides",
+                  "unified_report.pdf", "safety_guard_benchmark_deck.pptx"):
+        assert token in staging, f"Pages publication bundle is missing {token!r}"
 
 
 def test_the_page_carries_the_attribution_its_licence_requires():

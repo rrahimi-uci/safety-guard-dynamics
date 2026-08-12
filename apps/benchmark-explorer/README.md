@@ -1,8 +1,8 @@
 # Benchmark explorer (Phase 3 application package)
 
 Ledger-driven build. The predecessor at [`../../benchmark-explorer/`](../../benchmark-explorer/)
-remains as a compatibility surface and is **not** superseded until its tracked blob has a
-distribution decision.
+is retained only as a documented compatibility surface; its bulk HTML artifact and generator
+are withdrawn and must not be published.
 
 ```
 src/         build.py (ledger-driven) + generate_legacy.py (copied predecessor, unmodified)
@@ -16,9 +16,11 @@ dist/        ignored build root — public/ is audited staging, local/ is gated 
 ```bash
 python src/build.py --target public --fixtures   # CI-safe, allowlist-only
 python src/build.py --target local  --fixtures   # full text, never published
+python src/build.py --target public --benchmark ../../mortgage-benchmark/benchmark/v1_hmda2022/public_test.jsonl
 ```
 
-A full-data build needs local corpora and is deliberately not wired to `--fixtures`.
+The Pages publication uses the approved `v1_hmda2022` public test JSONL. Other local corpora
+must be supplied through an explicit local build and are never published automatically.
 
 ## Why this exists
 
