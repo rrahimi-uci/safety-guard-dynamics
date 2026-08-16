@@ -321,7 +321,7 @@ rates is not a comparison of discriminative power but of two different policies.
 thresholded quantities twice: at each guard's own calibration-selected cutoff, and with the tuned guard
 re-thresholded so its pooled false-alarm rate on the evaluated negatives is \emph{at or below its own base's}.
 Only the second licenses a sentence about catching more or less. One limit travels with every such
-number: the budget is located by a quantile of the \emph{evaluated} negatives and recall measured on
+number: the budget and matched threshold are determined on the \emph{evaluated} negatives and recall measured on
 those same rows, so it reads two ROC curves at a common point but is \emph{not} a threshold a
 production system could place, since placing it requires the labels the system is predicting
 (\Cref{sec:matched-fpr-limits}).
@@ -879,7 +879,7 @@ template and verdict-position bugs, since fixed). A genuinely sealed cohort is t
 exist here. The specialization signature is also a property of this adapter configuration on this data
 --- we sweep neither rank, step budget, nor data mixture --- pools are balanced or near-balanced, which
 \Cref{sec:prevalence} shows is optimistic relative to deployed precision, and we classify the incoming
-request only. Finally, every matched-budget number places its threshold using a quantile of the labelled
+request only. Finally, every matched-budget number selects its threshold from the labelled
 negatives it is then scored on, so it is not one a production system could place
 (\Cref{sec:matched-fpr-limits}).
 
@@ -1055,8 +1055,8 @@ $2{,}000$ replicates resampling near-duplicate evaluation families and training 
 \subsection{What a matched-budget number is and is not}
 \label{sec:matched-fpr-limits}
 
-Every matched-budget figure in this paper places a common alarm budget by taking a quantile of the
-\emph{evaluated} negatives and then measuring recall on the same rows. This is a standard way to read a
+Every matched-budget figure in this paper sets a base-model alarm budget and selects its matched threshold
+from the observed scores of the \emph{evaluated} negatives, then measures recall on the same rows. This is a standard way to read a
 pair of ROC curves at one common point, and the paired bootstrap re-estimates the functional inside
 every replicate, so the intervals are internally consistent. It is \emph{not} a threshold a production
 system could use, because placing it requires the labels the system is trying to predict. Read every
