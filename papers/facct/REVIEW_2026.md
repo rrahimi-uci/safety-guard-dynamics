@@ -52,9 +52,11 @@ The branch corrects the matched-FPR reconstruction rather than merely qualifying
 - The required generative-AI statement now names OpenAI Codex and limits its claimed role to code assistance and copy-editing.
 - Verified records corrected the bibliographic metadata for seven guardrail and policy-compliance references; this does not make their post-deadline use valid for FAccT 2026.
 
-## Reassessment after the verified correction: 78/100
+## Reassessment after the verified correction: 78/100 standards-readiness; 0/100 FAccT 2026 submission eligibility
 
 The correction improves methodological rigor, evidence integrity, and reproducibility, but it cannot raise the work to 90 because it introduces no new independent data, stakeholder evidence, or prospective experiment. A score of 90 or above would be misleading.
+
+The 78/100 score measures the quality of the current artifact against FAccT's substantive standard. It is not an eligibility score: the passed deadline and post-deadline citations make current FAccT 2026 submission eligibility zero. A later-venue submission would need a venue-specific review; a reconstructed FAccT 2026 version would need the January-valid evidence and bibliography preserved as of that date.
 
 | Dimension changed by this branch | Baseline | Revised | Reason |
 | --- | ---: | ---: | --- |
