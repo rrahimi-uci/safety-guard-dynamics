@@ -184,12 +184,11 @@ unequal false-alarm rates is not a comparison of discriminative power.
 
 \paragraph{The fair comparison: an equal false-alarm budget.} So we make the alarm budgets equal and
 re-read the same rows. \Cref{tab:matchedfpr} gives each tuned guard the threshold at which its pooled
-transfer false-alarm rate \emph{matches its own base's}, and then compares recalls. The modest apparent
+transfer false-alarm rate is \emph{at or below its own base's}, and then compares recalls. The modest apparent
 gain does not merely shrink --- it reverses, on \emph{all four} checkpoints and by a wide margin: transfer recall goes \MatchedTransferBase{}\,$\to$\,\MatchedTransferSft{}
 (\MatchedTransferDelta) and \texttt{HarmBench} recall \MatchedHarmBase{}\,$\to$\,\MatchedHarmSft{}
 (\MatchedHarmDelta). At an equal alarm budget the tuned guard catches \emph{less than half} of what its
-own untuned base catches off-source. The direction is stable across the three quantile conventions we
-tried (panel mean \MatchedStabilityLo{} to \MatchedStabilityHi).
+own untuned base catches off-source.
 
 This is the honest form of the operating-point result, and it is the one the rest of Act~I predicts: the
 $+0.06$ recall gain in \Cref{tab:sensitivity} is an artifact of comparing at unequal alarm rates. It needs

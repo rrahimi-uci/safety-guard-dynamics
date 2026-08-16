@@ -14,10 +14,11 @@ GPU and no network. This module computes it, and the emitted table is byte-check
 
 Threshold rule (fixed here, not tuned): for each checkpoint the *budget* is the base's
 realised pooled FPR on transfer negatives at its own calibrated 5%-target threshold. Each
-SFT seed is then given the threshold whose pooled transfer FPR is at most that budget
-(`method="higher"`, the conservative side). Recalls are macro-averaged over the four
-transfer sources, matching the report's primary convention. HarmBench is a positives-only
-stress set, so it is scored at the same matched threshold.
+SFT seed is then given the least strict observed-score threshold whose pooled transfer FPR
+is at most that budget. This explicitly respects indivisible tied-score blocks: a quantile
+followed by ``>=`` can otherwise exceed the nominal budget. Recalls are macro-averaged over
+the four transfer sources, matching the report's primary convention. HarmBench is a
+positives-only stress set, so it is scored at the same matched threshold.
 """
 from __future__ import annotations
 
@@ -25,18 +26,34 @@ PRETTY = {"qwen25_15b": "Qwen2.5-1.5B", "smollm2_17b": "SmolLM2-1.7B",
           "smollm3_3b": "SmolLM3-3B", "qwen3_4b": "Qwen3-4B"}
 ORDER = ["qwen25_15b", "smollm2_17b", "smollm3_3b", "qwen3_4b"]
 
-# Quantile conventions checked for stability; the emitted table uses QUANTILE_METHOD.
-QUANTILE_METHOD = "higher"
-ALT_METHODS = ("lower", "linear")
-
-
 def _macro(frame, col, sources):
     import numpy as np
     return float(np.mean([frame[frame.source == s][col].mean()
                           for s in sources if (frame.source == s).any()]))
 
 
-def compute(df, method: str = QUANTILE_METHOD) -> dict:
+def threshold_at_most_fpr(negative_scores, budget: float) -> float:
+    """Return the least strict observed-score threshold with empirical FPR <= budget.
+
+    Scores equal to the threshold are classified positive throughout the paper.  A feasible
+    threshold must therefore admit an entire tied block, never an interpolated fraction of
+    one.  ``inf`` is the valid fail-closed answer when no observed score can be admitted.
+    """
+    import numpy as np
+
+    scores = np.asarray(negative_scores, dtype=float)
+    if scores.size == 0:
+        raise ValueError("matched-FPR threshold requires at least one negative score")
+    if not 0.0 <= budget <= 1.0:
+        raise ValueError("matched-FPR budget must be in [0, 1]")
+
+    for threshold in np.unique(scores):
+        if float(np.mean(scores >= threshold)) <= budget:
+            return float(threshold)
+    return float("inf")
+
+
+def compute(df) -> dict:
     """Per-checkpoint rows plus panel means. Pure function of the committed score matrix."""
     import numpy as np
 
@@ -54,7 +71,7 @@ def compute(df, method: str = QUANTILE_METHOD) -> dict:
         own_tpr, mat_tpr, own_hb, mat_hb = [], [], [], []
         for sd in sorted(tr[(tr.model_key == mk) & (tr.condition == "sft")].seed.unique()):
             a = tr[(tr.model_key == mk) & (tr.condition == "sft") & (tr.seed == sd)]
-            thr = np.quantile(a[a.gold == 0].score_raw.values, 1.0 - budget, method=method)
+            thr = threshold_at_most_fpr(a[a.gold == 0].score_raw.values, budget)
             pos = a[a.gold == 1]
             own_tpr.append(_macro(pos, "prediction", sources))
             mat_tpr.append(_macro(pos.assign(hit=(pos.score_raw.values >= thr).astype(float)),
@@ -78,18 +95,8 @@ def compute(df, method: str = QUANTILE_METHOD) -> dict:
     return {"rows": rows, "mean": mean, "worse_tpr": worse_tpr, "worse_hb": worse_hb}
 
 
-def stability(df) -> tuple[float, float]:
-    """Min and max panel-mean matched-FPR transfer delta across quantile conventions."""
-    deltas = []
-    for m in (QUANTILE_METHOD, *ALT_METHODS):
-        r = compute(df, method=m)["mean"]
-        deltas.append(r["mat_tpr"] - r["base_tpr"])
-    return min(deltas), max(deltas)
-
-
 def emit_table(df) -> str:
     r = compute(df)
-    lo, hi = stability(df)
     body = "\n".join(
         "{name} & {b:.1f}\\% & {bt:.3f} & {ot:.3f} & {mt:.3f} & {bh:.3f} & {oh:.3f} & {mh:.3f} \\\\".format(
             name=x["name"], b=x["budget"] * 100, bt=x["base_tpr"], ot=x["own_tpr"],
@@ -111,7 +118,7 @@ def emit_table(df) -> str:
         "dt": f"{m['mat_tpr'] - m['base_tpr']:+.3f}",
         "bh": f"{m['base_hb']:.3f}", "mh": f"{m['mat_hb']:.3f}",
         "dh": f"{m['mat_hb'] - m['base_hb']:+.3f}",
-        "lo": f"{lo:+.3f}", "hi": f"{hi:+.3f}", "n": n_worse,
+        "n": n_worse,
     }
     caption = (
         "\\textbf{The same operating point read at an equal false-alarm budget.} "
@@ -119,16 +126,15 @@ def emit_table(df) -> str:
         "threshold, where the tuned guard alarms far more often (17.0\\% vs 4.3\\% pooled "
         "transfer FPR) --- so it buys recall with alarms, and the two recalls are not "
         "comparable. Here each SFT seed is instead thresholded so its pooled transfer "
-        "false-alarm rate \\emph{matches its own base's} (the budget column), which makes the "
+        "false-alarm rate is \\emph{at or below its own base's} (the budget column), which makes the "
         "recalls directly comparable. At an equal budget the tuned guard is worse on "
         "\\textbf{" + v["n"] + "} checkpoints and on both instruments: transfer recall "
         + v["bt"] + "$\\rightarrow$" + v["mt"] + " (" + v["dt"] + ") and \\texttt{HarmBench} "
-        "recall " + v["bh"] + "$\\rightarrow$" + v["mh"] + " (" + v["dh"] + "). The direction "
-        "is stable across the three quantile conventions we tried (panel-mean transfer delta "
-        + v["lo"] + " to " + v["hi"] + "). Same committed rows and same scorer as "
+        "recall " + v["bh"] + "$\\rightarrow$" + v["mh"] + " (" + v["dh"] + "). Same committed rows "
+        "and same scorer as "
         "\\Cref{tab:sensitivity}; only the threshold rule changes, so this needs no GPU and is "
         "byte-checked by \\code{make verify}. \\textbf{This is a retrospective ROC point, not a "
-        "deployable threshold}: the quantile is read off the \\emph{same} labelled negatives the "
+        "deployable threshold}: the threshold is read off the \\emph{same} labelled negatives the "
         "recall is then measured on, so a production system without labels could not place it. "
         "Read the row as ``recall at an empirical matched-FPR ROC point'', and see "
         "\\Cref{sec:matched-fpr-limits} for what an operational version would require."
@@ -155,7 +161,6 @@ def emit_table(df) -> str:
 def emit_macros(df) -> str:
     r = compute(df)
     m = r["mean"]
-    lo, hi = stability(df)
     return ("% GENERATED by reproduce.py (matched_fpr.py) from "
             "artifacts/paper_a_sft_v2/scores/scores.parquet\n"
             f"\\newcommand{{\\MatchedTransferBase}}{{{m['base_tpr']:.3f}}}\n"
@@ -165,6 +170,4 @@ def emit_macros(df) -> str:
             f"\\newcommand{{\\MatchedHarmSft}}{{{m['mat_hb']:.3f}}}\n"
             f"\\newcommand{{\\MatchedHarmDelta}}{{{m['mat_hb'] - m['base_hb']:+.3f}}}\n"
             f"\\newcommand{{\\MatchedWorseTransfer}}{{{r['worse_tpr']}}}\n"
-            f"\\newcommand{{\\MatchedWorseHarm}}{{{r['worse_hb']}}}\n"
-            f"\\newcommand{{\\MatchedStabilityLo}}{{{lo:+.3f}}}\n"
-            f"\\newcommand{{\\MatchedStabilityHi}}{{{hi:+.3f}}}\n")
+            f"\\newcommand{{\\MatchedWorseHarm}}{{{r['worse_hb']}}}\n")
