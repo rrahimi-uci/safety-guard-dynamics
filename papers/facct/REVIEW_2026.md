@@ -12,6 +12,8 @@ The guide and the [2026 CFP](https://facctconference.org/2026/cfp.html) evaluate
 
 The 2026 submission deadline (2026-01-13 AoE) and conference dates (2026-06-25 to 2026-06-28) have passed. This review therefore assesses the artifact against the 2026 standard; it cannot make the work submittable to that already closed venue.
 
+There is also a hard temporal incompatibility in the current bibliography: it cites work first released in March, May, and July 2026, including ExpGuard and several ACL 2026 papers. Those works were unavailable at the January 13 submission deadline. The corrected metadata is useful for the current archival manuscript, but a hypothetical January-version submission would need a deadline-valid reference set and would lose the arguments that rely on post-deadline work.
+
 ## Baseline score: 76/100
 
 The score is a readiness assessment, not a predicted acceptance probability. It weights the criteria published in the FAccT author and reviewer guides, with extra weight on whether an empirical governance claim is supported by the evidence actually collected.
@@ -37,6 +39,7 @@ The score is a readiness assessment, not a predicted acceptance probability. It 
 3. **The generality claim is narrow.** Four checkpoints from two lineages, one manifest, and one LoRA recipe support a fixed-panel estimate, not a conclusion about safety-guard adaptation generally.
 4. **The frontier regime reversal is not confirmatory.** The represented-source aggregation is post hoc, based on three purposively chosen sources, and changes under defensible reweighting.
 5. **The matched-FPR headline was technically overstated.** A score quantile followed by `>=` can classify a whole tied negative-score block and exceed the intended budget. This review's correction changes the transfer result from 0.217 to 0.185 and HarmBench recall from 0.203 to 0.171; it does not reverse the qualitative conclusion.
+6. **The current bibliography is temporally ineligible for FAccT 2026.** Citations released after the submission deadline cannot be part of the frozen January submission. Treat the paper as a later-venue or archival revision unless authors reconstruct a deadline-valid version.
 
 ## Revision completed in this branch
 
@@ -47,6 +50,7 @@ The branch corrects the matched-FPR reconstruction rather than merely qualifying
 - The claim-bearing generated table/macros and the FAccT figures were regenerated from the committed score matrix.
 - The FAccT and unified-report text now accurately says “at or below” rather than “matches,” and removes the invalid quantile-sensitivity claim.
 - The required generative-AI statement now names OpenAI Codex and limits its claimed role to code assistance and copy-editing.
+- Verified records corrected the bibliographic metadata for seven guardrail and policy-compliance references; this does not make their post-deadline use valid for FAccT 2026.
 
 ## Reassessment after the verified correction: 78/100
 
