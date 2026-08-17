@@ -47,9 +47,11 @@ def threshold_at_most_fpr(negative_scores, budget: float) -> float:
     if not 0.0 <= budget <= 1.0:
         raise ValueError("matched-FPR budget must be in [0, 1]")
 
-    for threshold in np.unique(scores):
-        if float(np.mean(scores >= threshold)) <= budget:
-            return float(threshold)
+    thresholds, counts = np.unique(scores, return_counts=True)
+    fpr = np.cumsum(counts[::-1])[::-1] / scores.size
+    idx = np.flatnonzero(fpr <= budget)
+    if idx.size:
+        return float(thresholds[idx[0]])
     return float("inf")
 
 
