@@ -10,7 +10,7 @@ See [README.md](README.md) for environment setup and dependency installation.
 
 - Add or update tests for any behavior change.
 - Run the project's lint/test suite locally before submitting.
-- Keep documentation (`docs/`, `docs/architecture/repository-layout-v2.md`) in sync with code changes.
+- Keep documentation (`docs/`, [docs/architecture/repository-layout-v2.md](docs/architecture/repository-layout-v2.md)) in sync with code changes.
 - Use clear, descriptive commit messages.
 
 ## Reporting bugs / requesting features
