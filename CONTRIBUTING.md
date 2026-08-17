@@ -1,0 +1,20 @@
+# Contributing
+
+Thanks for your interest in contributing to **safety-guard-dynamics**.
+
+## Dev setup
+
+See [README.md](README.md) for environment setup and dependency installation.
+
+## Before you open a PR
+
+- Add or update tests for any behavior change.
+- Run the project's lint/test suite locally before submitting.
+- Keep documentation (`docs/`, `ARCHITECTURE.md`) in sync with code changes.
+- Use clear, descriptive commit messages.
+
+## Reporting bugs / requesting features
+
+Use the issue templates under [.github/ISSUE_TEMPLATE](.github/ISSUE_TEMPLATE). For security issues, follow [SECURITY.md](SECURITY.md) instead of opening a public issue.
+
+By contributing you agree your contributions are licensed under the project's [LICENSE](LICENSE).
