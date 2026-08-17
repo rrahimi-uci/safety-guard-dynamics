@@ -11,7 +11,7 @@
 transformers==5.12.1
 peft==0.19.1
 # torch matching the run (LOCK records torch 2.12.1+cu130; base version pinned here):
-torch==2.12.1
+torch==2.13.0
 accelerate==1.14.0
 safetensors==0.8.0
 sentencepiece

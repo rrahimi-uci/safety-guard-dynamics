@@ -22,7 +22,7 @@ transformers==5.12.1
 matplotlib==3.11.0
 
 # --- training + scoring (pipeline steps 4-5; GPU) and HF manifest sourcing (step 1) ---
-torch==2.12.1
+torch==2.13.0
 peft==0.19.1
 trl==1.7.0
 datasets==5.0.0
